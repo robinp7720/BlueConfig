@@ -1,7 +1,6 @@
 <?php
 
 namespace Blue;
-use Blue\mysql;
 
 require_once("drivers/mysql.php");
 
@@ -38,8 +37,16 @@ class config
     }
 
     public function set($option, $value = null) {
-        if (gettype($option) == "array") {
-            $this->setArray($option);
+        if (gettype($option) == "array" || gettype($value) == "array" ) {
+            if ($value) {
+                // Add a dot if there is none in the path
+                if (substr($option, -1)!='.') {
+                    $option .= '.';
+                }
+                $this->setArray($value, $option);
+            } else {
+                $this->setArray($option);
+            }
         }elseif (gettype($option) == "string") {
             $this->setValue($option,$value);
         }
